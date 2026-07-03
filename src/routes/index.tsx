@@ -219,7 +219,12 @@ function MetricCard({ metric }: { metric: (typeof dashboardMetrics)[0] }) {
   );
 }
 
-function StatusDot({ status }: { status: string }) {
+function ClientOnly({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
+  return <>{children}</>;
+}
   const color =
     status === "Available"
       ? "bg-success"
