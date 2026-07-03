@@ -225,6 +225,8 @@ function ClientOnly({ children }: { children: React.ReactNode }) {
   if (!mounted) return null;
   return <>{children}</>;
 }
+
+function StatusDot({ status }: { status: string }) {
   const color =
     status === "Available"
       ? "bg-success"
