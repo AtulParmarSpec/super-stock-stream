@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AssetsRouteImport } from './routes/assets'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AssetsIdRouteImport } from './routes/assets.$id'
 
 const AssetsRoute = AssetsRouteImport.update({
   id: '/assets',
@@ -22,31 +23,39 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssetsIdRoute = AssetsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AssetsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/assets': typeof AssetsRoute
+  '/assets': typeof AssetsRouteWithChildren
+  '/assets/$id': typeof AssetsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/assets': typeof AssetsRoute
+  '/assets': typeof AssetsRouteWithChildren
+  '/assets/$id': typeof AssetsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/assets': typeof AssetsRoute
+  '/assets': typeof AssetsRouteWithChildren
+  '/assets/$id': typeof AssetsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/assets'
+  fullPaths: '/' | '/assets' | '/assets/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/assets'
-  id: '__root__' | '/' | '/assets'
+  to: '/' | '/assets' | '/assets/$id'
+  id: '__root__' | '/' | '/assets' | '/assets/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AssetsRoute: typeof AssetsRoute
+  AssetsRoute: typeof AssetsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +74,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/assets/$id': {
+      id: '/assets/$id'
+      path: '/$id'
+      fullPath: '/assets/$id'
+      preLoaderRoute: typeof AssetsIdRouteImport
+      parentRoute: typeof AssetsRoute
+    }
   }
 }
 
+interface AssetsRouteChildren {
+  AssetsIdRoute: typeof AssetsIdRoute
+}
+
+const AssetsRouteChildren: AssetsRouteChildren = {
+  AssetsIdRoute: AssetsIdRoute,
+}
+
+const AssetsRouteWithChildren =
+  AssetsRoute._addFileChildren(AssetsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AssetsRoute: AssetsRoute,
+  AssetsRoute: AssetsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
