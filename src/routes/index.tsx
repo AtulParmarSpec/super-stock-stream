@@ -28,7 +28,6 @@ import {
   PieChart,
   Pie,
   Cell,
-  ResponsiveContainer,
   Tooltip,
   Legend,
   BarChart,
