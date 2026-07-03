@@ -175,7 +175,7 @@ function DashboardPage() {
                     <XAxis dataKey="name" tick={{ fontSize: 12 }} />
                     <YAxis tick={{ fontSize: 12 }} />
                     <Tooltip />
-                    <Bar dataKey="value" radius={[4, 4, 0, 0]} fill="var(--color-primary)" />
+                    <Bar dataKey="value" radius={[4, 4, 0, 0]} fill="#3b6fa0" />
                   </BarChart>
                 </ClientOnly>
               </div>
