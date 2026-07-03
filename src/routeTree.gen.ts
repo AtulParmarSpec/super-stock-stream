@@ -9,11 +9,43 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TransfersRouteImport } from './routes/transfers'
+import { Route as MastersRouteImport } from './routes/masters'
+import { Route as MaintenanceRouteImport } from './routes/maintenance'
+import { Route as AssignmentsRouteImport } from './routes/assignments'
 import { Route as AssetsRouteImport } from './routes/assets'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MastersIndexRouteImport } from './routes/masters.index'
 import { Route as AssetsIndexRouteImport } from './routes/assets.index'
+import { Route as MastersVendorsRouteImport } from './routes/masters.vendors'
+import { Route as MastersOfficesRouteImport } from './routes/masters.offices'
+import { Route as MastersEmployeesRouteImport } from './routes/masters.employees'
+import { Route as MastersDepartmentsRouteImport } from './routes/masters.departments'
+import { Route as MastersCompaniesRouteImport } from './routes/masters.companies'
+import { Route as MastersCategoriesRouteImport } from './routes/masters.categories'
+import { Route as MastersBrandsRouteImport } from './routes/masters.brands'
 import { Route as AssetsIdRouteImport } from './routes/assets.$id'
 
+const TransfersRoute = TransfersRouteImport.update({
+  id: '/transfers',
+  path: '/transfers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MastersRoute = MastersRouteImport.update({
+  id: '/masters',
+  path: '/masters',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MaintenanceRoute = MaintenanceRouteImport.update({
+  id: '/maintenance',
+  path: '/maintenance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssignmentsRoute = AssignmentsRouteImport.update({
+  id: '/assignments',
+  path: '/assignments',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AssetsRoute = AssetsRouteImport.update({
   id: '/assets',
   path: '/assets',
@@ -24,10 +56,50 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MastersIndexRoute = MastersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MastersRoute,
+} as any)
 const AssetsIndexRoute = AssetsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AssetsRoute,
+} as any)
+const MastersVendorsRoute = MastersVendorsRouteImport.update({
+  id: '/vendors',
+  path: '/vendors',
+  getParentRoute: () => MastersRoute,
+} as any)
+const MastersOfficesRoute = MastersOfficesRouteImport.update({
+  id: '/offices',
+  path: '/offices',
+  getParentRoute: () => MastersRoute,
+} as any)
+const MastersEmployeesRoute = MastersEmployeesRouteImport.update({
+  id: '/employees',
+  path: '/employees',
+  getParentRoute: () => MastersRoute,
+} as any)
+const MastersDepartmentsRoute = MastersDepartmentsRouteImport.update({
+  id: '/departments',
+  path: '/departments',
+  getParentRoute: () => MastersRoute,
+} as any)
+const MastersCompaniesRoute = MastersCompaniesRouteImport.update({
+  id: '/companies',
+  path: '/companies',
+  getParentRoute: () => MastersRoute,
+} as any)
+const MastersCategoriesRoute = MastersCategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => MastersRoute,
+} as any)
+const MastersBrandsRoute = MastersBrandsRouteImport.update({
+  id: '/brands',
+  path: '/brands',
+  getParentRoute: () => MastersRoute,
 } as any)
 const AssetsIdRoute = AssetsIdRouteImport.update({
   id: '/$id',
@@ -38,36 +110,150 @@ const AssetsIdRoute = AssetsIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assets': typeof AssetsRouteWithChildren
+  '/assignments': typeof AssignmentsRoute
+  '/maintenance': typeof MaintenanceRoute
+  '/masters': typeof MastersRouteWithChildren
+  '/transfers': typeof TransfersRoute
   '/assets/$id': typeof AssetsIdRoute
+  '/masters/brands': typeof MastersBrandsRoute
+  '/masters/categories': typeof MastersCategoriesRoute
+  '/masters/companies': typeof MastersCompaniesRoute
+  '/masters/departments': typeof MastersDepartmentsRoute
+  '/masters/employees': typeof MastersEmployeesRoute
+  '/masters/offices': typeof MastersOfficesRoute
+  '/masters/vendors': typeof MastersVendorsRoute
   '/assets/': typeof AssetsIndexRoute
+  '/masters/': typeof MastersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/assignments': typeof AssignmentsRoute
+  '/maintenance': typeof MaintenanceRoute
+  '/transfers': typeof TransfersRoute
   '/assets/$id': typeof AssetsIdRoute
+  '/masters/brands': typeof MastersBrandsRoute
+  '/masters/categories': typeof MastersCategoriesRoute
+  '/masters/companies': typeof MastersCompaniesRoute
+  '/masters/departments': typeof MastersDepartmentsRoute
+  '/masters/employees': typeof MastersEmployeesRoute
+  '/masters/offices': typeof MastersOfficesRoute
+  '/masters/vendors': typeof MastersVendorsRoute
   '/assets': typeof AssetsIndexRoute
+  '/masters': typeof MastersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/assets': typeof AssetsRouteWithChildren
+  '/assignments': typeof AssignmentsRoute
+  '/maintenance': typeof MaintenanceRoute
+  '/masters': typeof MastersRouteWithChildren
+  '/transfers': typeof TransfersRoute
   '/assets/$id': typeof AssetsIdRoute
+  '/masters/brands': typeof MastersBrandsRoute
+  '/masters/categories': typeof MastersCategoriesRoute
+  '/masters/companies': typeof MastersCompaniesRoute
+  '/masters/departments': typeof MastersDepartmentsRoute
+  '/masters/employees': typeof MastersEmployeesRoute
+  '/masters/offices': typeof MastersOfficesRoute
+  '/masters/vendors': typeof MastersVendorsRoute
   '/assets/': typeof AssetsIndexRoute
+  '/masters/': typeof MastersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/assets' | '/assets/$id' | '/assets/'
+  fullPaths:
+    | '/'
+    | '/assets'
+    | '/assignments'
+    | '/maintenance'
+    | '/masters'
+    | '/transfers'
+    | '/assets/$id'
+    | '/masters/brands'
+    | '/masters/categories'
+    | '/masters/companies'
+    | '/masters/departments'
+    | '/masters/employees'
+    | '/masters/offices'
+    | '/masters/vendors'
+    | '/assets/'
+    | '/masters/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/assets/$id' | '/assets'
-  id: '__root__' | '/' | '/assets' | '/assets/$id' | '/assets/'
+  to:
+    | '/'
+    | '/assignments'
+    | '/maintenance'
+    | '/transfers'
+    | '/assets/$id'
+    | '/masters/brands'
+    | '/masters/categories'
+    | '/masters/companies'
+    | '/masters/departments'
+    | '/masters/employees'
+    | '/masters/offices'
+    | '/masters/vendors'
+    | '/assets'
+    | '/masters'
+  id:
+    | '__root__'
+    | '/'
+    | '/assets'
+    | '/assignments'
+    | '/maintenance'
+    | '/masters'
+    | '/transfers'
+    | '/assets/$id'
+    | '/masters/brands'
+    | '/masters/categories'
+    | '/masters/companies'
+    | '/masters/departments'
+    | '/masters/employees'
+    | '/masters/offices'
+    | '/masters/vendors'
+    | '/assets/'
+    | '/masters/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AssetsRoute: typeof AssetsRouteWithChildren
+  AssignmentsRoute: typeof AssignmentsRoute
+  MaintenanceRoute: typeof MaintenanceRoute
+  MastersRoute: typeof MastersRouteWithChildren
+  TransfersRoute: typeof TransfersRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/transfers': {
+      id: '/transfers'
+      path: '/transfers'
+      fullPath: '/transfers'
+      preLoaderRoute: typeof TransfersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/masters': {
+      id: '/masters'
+      path: '/masters'
+      fullPath: '/masters'
+      preLoaderRoute: typeof MastersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/maintenance': {
+      id: '/maintenance'
+      path: '/maintenance'
+      fullPath: '/maintenance'
+      preLoaderRoute: typeof MaintenanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assignments': {
+      id: '/assignments'
+      path: '/assignments'
+      fullPath: '/assignments'
+      preLoaderRoute: typeof AssignmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/assets': {
       id: '/assets'
       path: '/assets'
@@ -82,12 +268,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/masters/': {
+      id: '/masters/'
+      path: '/'
+      fullPath: '/masters/'
+      preLoaderRoute: typeof MastersIndexRouteImport
+      parentRoute: typeof MastersRoute
+    }
     '/assets/': {
       id: '/assets/'
       path: '/'
       fullPath: '/assets/'
       preLoaderRoute: typeof AssetsIndexRouteImport
       parentRoute: typeof AssetsRoute
+    }
+    '/masters/vendors': {
+      id: '/masters/vendors'
+      path: '/vendors'
+      fullPath: '/masters/vendors'
+      preLoaderRoute: typeof MastersVendorsRouteImport
+      parentRoute: typeof MastersRoute
+    }
+    '/masters/offices': {
+      id: '/masters/offices'
+      path: '/offices'
+      fullPath: '/masters/offices'
+      preLoaderRoute: typeof MastersOfficesRouteImport
+      parentRoute: typeof MastersRoute
+    }
+    '/masters/employees': {
+      id: '/masters/employees'
+      path: '/employees'
+      fullPath: '/masters/employees'
+      preLoaderRoute: typeof MastersEmployeesRouteImport
+      parentRoute: typeof MastersRoute
+    }
+    '/masters/departments': {
+      id: '/masters/departments'
+      path: '/departments'
+      fullPath: '/masters/departments'
+      preLoaderRoute: typeof MastersDepartmentsRouteImport
+      parentRoute: typeof MastersRoute
+    }
+    '/masters/companies': {
+      id: '/masters/companies'
+      path: '/companies'
+      fullPath: '/masters/companies'
+      preLoaderRoute: typeof MastersCompaniesRouteImport
+      parentRoute: typeof MastersRoute
+    }
+    '/masters/categories': {
+      id: '/masters/categories'
+      path: '/categories'
+      fullPath: '/masters/categories'
+      preLoaderRoute: typeof MastersCategoriesRouteImport
+      parentRoute: typeof MastersRoute
+    }
+    '/masters/brands': {
+      id: '/masters/brands'
+      path: '/brands'
+      fullPath: '/masters/brands'
+      preLoaderRoute: typeof MastersBrandsRouteImport
+      parentRoute: typeof MastersRoute
     }
     '/assets/$id': {
       id: '/assets/$id'
@@ -112,9 +354,38 @@ const AssetsRouteChildren: AssetsRouteChildren = {
 const AssetsRouteWithChildren =
   AssetsRoute._addFileChildren(AssetsRouteChildren)
 
+interface MastersRouteChildren {
+  MastersBrandsRoute: typeof MastersBrandsRoute
+  MastersCategoriesRoute: typeof MastersCategoriesRoute
+  MastersCompaniesRoute: typeof MastersCompaniesRoute
+  MastersDepartmentsRoute: typeof MastersDepartmentsRoute
+  MastersEmployeesRoute: typeof MastersEmployeesRoute
+  MastersOfficesRoute: typeof MastersOfficesRoute
+  MastersVendorsRoute: typeof MastersVendorsRoute
+  MastersIndexRoute: typeof MastersIndexRoute
+}
+
+const MastersRouteChildren: MastersRouteChildren = {
+  MastersBrandsRoute: MastersBrandsRoute,
+  MastersCategoriesRoute: MastersCategoriesRoute,
+  MastersCompaniesRoute: MastersCompaniesRoute,
+  MastersDepartmentsRoute: MastersDepartmentsRoute,
+  MastersEmployeesRoute: MastersEmployeesRoute,
+  MastersOfficesRoute: MastersOfficesRoute,
+  MastersVendorsRoute: MastersVendorsRoute,
+  MastersIndexRoute: MastersIndexRoute,
+}
+
+const MastersRouteWithChildren =
+  MastersRoute._addFileChildren(MastersRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AssetsRoute: AssetsRouteWithChildren,
+  AssignmentsRoute: AssignmentsRoute,
+  MaintenanceRoute: MaintenanceRoute,
+  MastersRoute: MastersRouteWithChildren,
+  TransfersRoute: TransfersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
