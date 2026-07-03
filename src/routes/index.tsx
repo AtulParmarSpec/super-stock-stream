@@ -165,7 +165,7 @@ function DashboardPage() {
               <CardDescription>Total acquisition cost grouped by asset category</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-72">
+              <div className="h-72 w-full min-w-0">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={categoryDistribution}
