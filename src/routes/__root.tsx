@@ -84,10 +84,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Enterprise IT asset inventory management for large software companies. Track assets, assignments, maintenance, and warranties across locations and departments." },
       { name: "author", content: "AssetFlow" },
       { property: "og:title", content: "AssetFlow — Enterprise IT Inventory" },
-      { property: "og:description", content: "Enterprise IT asset inventory management for large software companies." },
+      { property: "og:description", content: "Enterprise IT asset inventory management for large software companies. Track assets, assignments, maintenance, and warranties across locations and departments." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@assetflow" },
+      { name: "twitter:title", content: "AssetFlow — Enterprise IT Inventory" },
+      { name: "twitter:description", content: "Enterprise IT asset inventory management for large software companies. Track assets, assignments, maintenance, and warranties across locations and departments." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e8441951-5e74-4707-8550-652d093a388c/id-preview-4cea3d00--3c56ec6d-bb8c-412a-af52-804e705e902d.lovable.app-1783079555254.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e8441951-5e74-4707-8550-652d093a388c/id-preview-4cea3d00--3c56ec6d-bb8c-412a-af52-804e705e902d.lovable.app-1783079555254.png" },
     ],
     links: [
       {
