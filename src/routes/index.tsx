@@ -5,9 +5,7 @@ import {
   TrendingUp,
   TrendingDown,
   Minus,
-  ArrowUpRight,
   Clock,
-  AlertCircle,
 } from "lucide-react";
 import {
   Card,
