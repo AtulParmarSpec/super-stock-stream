@@ -458,14 +458,14 @@ export const dashboardMetrics: DashboardMetric[] = [
 ];
 
 export const categoryDistribution = [
-  { name: "Laptop", value: 4, fill: "var(--color-primary)" },
-  { name: "Monitor", value: 3, fill: "var(--color-info)" },
-  { name: "Server", value: 2, fill: "var(--color-chart-2)" },
-  { name: "Network Equipment", value: 2, fill: "var(--color-chart-3)" },
-  { name: "Mobile Device", value: 3, fill: "var(--color-chart-4)" },
-  { name: "Software License", value: 3, fill: "var(--color-chart-5)" },
-  { name: "Peripheral", value: 2, fill: "var(--color-muted-foreground)" },
-  { name: "Printer", value: 1, fill: "var(--color-warning)" },
+  { name: "Laptop", value: 4, fill: "#3b6fa0" },
+  { name: "Monitor", value: 3, fill: "#5a8a5c" },
+  { name: "Server", value: 2, fill: "#a0522d" },
+  { name: "Network Equipment", value: 2, fill: "#9b72cf" },
+  { name: "Mobile Device", value: 3, fill: "#2d8a9e" },
+  { name: "Software License", value: 3, fill: "#c4654a" },
+  { name: "Peripheral", value: 2, fill: "#718096" },
+  { name: "Printer", value: 1, fill: "#d4842a" },
 ];
 
 export const recentActivity = [

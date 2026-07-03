@@ -1,12 +1,11 @@
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Package,
   TrendingUp,
   TrendingDown,
   Minus,
-  ArrowUpRight,
   Clock,
-  AlertCircle,
 } from "lucide-react";
 import {
   Card,
@@ -29,7 +28,6 @@ import {
   PieChart,
   Pie,
   Cell,
-  ResponsiveContainer,
   Tooltip,
   Legend,
   BarChart,
@@ -90,16 +88,17 @@ function DashboardPage() {
             <CardContent>
               <div className="grid gap-6 sm:grid-cols-2">
                 <div className="h-64 w-full min-w-0">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
+                  <ClientOnly>
+                    <PieChart width={280} height={256}>
                       <Pie
                         data={categoryDistribution}
-                        cx="50%"
-                        cy="50%"
+                        cx={140}
+                        cy={128}
                         innerRadius={60}
                         outerRadius={80}
                         paddingAngle={2}
                         dataKey="value"
+                        isAnimationActive={false}
                       >
                         {categoryDistribution.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -108,7 +107,7 @@ function DashboardPage() {
                       <Tooltip />
                       <Legend />
                     </PieChart>
-                  </ResponsiveContainer>
+                  </ClientOnly>
                 </div>
                 <div className="space-y-3">
                   {Object.entries(statusCounts).map(([status, count]) => (
@@ -166,8 +165,10 @@ function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="h-72 w-full min-w-0">
-                <ResponsiveContainer width="100%" height="100%">
+                <ClientOnly>
                   <BarChart
+                    width={1000}
+                    height={288}
                     data={categoryDistribution}
                     margin={{ top: 16, right: 16, bottom: 8, left: 0 }}
                   >
@@ -175,9 +176,9 @@ function DashboardPage() {
                     <XAxis dataKey="name" tick={{ fontSize: 12 }} />
                     <YAxis tick={{ fontSize: 12 }} />
                     <Tooltip />
-                    <Bar dataKey="value" radius={[4, 4, 0, 0]} fill="var(--color-primary)" />
+                    <Bar dataKey="value" radius={[4, 4, 0, 0]} fill="#3b6fa0" isAnimationActive={false} />
                   </BarChart>
-                </ResponsiveContainer>
+                </ClientOnly>
               </div>
             </CardContent>
           </Card>
@@ -212,6 +213,13 @@ function MetricCard({ metric }: { metric: (typeof dashboardMetrics)[0] }) {
       <p className={cn("mt-2 text-xs font-medium", trendColor)}>{metric.change}</p>
     </div>
   );
+}
+
+function ClientOnly({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
+  return <>{children}</>;
 }
 
 function StatusDot({ status }: { status: string }) {

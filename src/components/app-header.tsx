@@ -1,7 +1,6 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Bell, Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,10 +17,11 @@ export function AppHeader() {
         <SidebarTrigger className="h-8 w-8" />
         <div className="relative hidden md:block">
           <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
+          <input
             type="text"
             placeholder="Search assets, employees, tickets..."
-            className="h-8 w-72 rounded-md border border-input bg-background pl-9 text-sm focus-visible:ring-1"
+            className="h-8 w-72 rounded-md border border-input bg-background px-3 pl-9 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            suppressHydrationWarning
           />
         </div>
       </div>
