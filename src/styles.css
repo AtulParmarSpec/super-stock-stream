@@ -96,9 +96,6 @@
   --warning-foreground: oklch(0.25 0.05 85);
   --info: oklch(0.65 0.14 255);
   --info-foreground: oklch(0.99 0.005 255);
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  --font-display: "Inter", system-ui, -apple-system, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
 .dark {
