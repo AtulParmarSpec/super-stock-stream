@@ -9,11 +9,29 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TransfersRouteImport } from './routes/transfers'
+import { Route as MaintenanceRouteImport } from './routes/maintenance'
+import { Route as AssignmentsRouteImport } from './routes/assignments'
 import { Route as AssetsRouteImport } from './routes/assets'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AssetsIndexRouteImport } from './routes/assets.index'
 import { Route as AssetsIdRouteImport } from './routes/assets.$id'
 
+const TransfersRoute = TransfersRouteImport.update({
+  id: '/transfers',
+  path: '/transfers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MaintenanceRoute = MaintenanceRouteImport.update({
+  id: '/maintenance',
+  path: '/maintenance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssignmentsRoute = AssignmentsRouteImport.update({
+  id: '/assignments',
+  path: '/assignments',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AssetsRoute = AssetsRouteImport.update({
   id: '/assets',
   path: '/assets',
@@ -38,11 +56,17 @@ const AssetsIdRoute = AssetsIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assets': typeof AssetsRouteWithChildren
+  '/assignments': typeof AssignmentsRoute
+  '/maintenance': typeof MaintenanceRoute
+  '/transfers': typeof TransfersRoute
   '/assets/$id': typeof AssetsIdRoute
   '/assets/': typeof AssetsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/assignments': typeof AssignmentsRoute
+  '/maintenance': typeof MaintenanceRoute
+  '/transfers': typeof TransfersRoute
   '/assets/$id': typeof AssetsIdRoute
   '/assets': typeof AssetsIndexRoute
 }
@@ -50,24 +74,72 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/assets': typeof AssetsRouteWithChildren
+  '/assignments': typeof AssignmentsRoute
+  '/maintenance': typeof MaintenanceRoute
+  '/transfers': typeof TransfersRoute
   '/assets/$id': typeof AssetsIdRoute
   '/assets/': typeof AssetsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/assets' | '/assets/$id' | '/assets/'
+  fullPaths:
+    | '/'
+    | '/assets'
+    | '/assignments'
+    | '/maintenance'
+    | '/transfers'
+    | '/assets/$id'
+    | '/assets/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/assets/$id' | '/assets'
-  id: '__root__' | '/' | '/assets' | '/assets/$id' | '/assets/'
+  to:
+    | '/'
+    | '/assignments'
+    | '/maintenance'
+    | '/transfers'
+    | '/assets/$id'
+    | '/assets'
+  id:
+    | '__root__'
+    | '/'
+    | '/assets'
+    | '/assignments'
+    | '/maintenance'
+    | '/transfers'
+    | '/assets/$id'
+    | '/assets/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AssetsRoute: typeof AssetsRouteWithChildren
+  AssignmentsRoute: typeof AssignmentsRoute
+  MaintenanceRoute: typeof MaintenanceRoute
+  TransfersRoute: typeof TransfersRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/transfers': {
+      id: '/transfers'
+      path: '/transfers'
+      fullPath: '/transfers'
+      preLoaderRoute: typeof TransfersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/maintenance': {
+      id: '/maintenance'
+      path: '/maintenance'
+      fullPath: '/maintenance'
+      preLoaderRoute: typeof MaintenanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assignments': {
+      id: '/assignments'
+      path: '/assignments'
+      fullPath: '/assignments'
+      preLoaderRoute: typeof AssignmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/assets': {
       id: '/assets'
       path: '/assets'
@@ -115,6 +187,9 @@ const AssetsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AssetsRoute: AssetsRouteWithChildren,
+  AssignmentsRoute: AssignmentsRoute,
+  MaintenanceRoute: MaintenanceRoute,
+  TransfersRoute: TransfersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
