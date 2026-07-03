@@ -98,6 +98,7 @@ function DashboardPage() {
                         outerRadius={80}
                         paddingAngle={2}
                         dataKey="value"
+                        isAnimationActive={false}
                       >
                         {categoryDistribution.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.fill} />
