@@ -166,18 +166,18 @@ function DashboardPage() {
             <CardContent>
               <div className="h-72 w-full min-w-0">
                 <ClientOnly>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      data={categoryDistribution}
-                      margin={{ top: 16, right: 16, bottom: 8, left: 0 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                      <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                      <YAxis tick={{ fontSize: 12 }} />
-                      <Tooltip />
-                      <Bar dataKey="value" radius={[4, 4, 0, 0]} fill="var(--color-primary)" />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  <BarChart
+                    width={1000}
+                    height={288}
+                    data={categoryDistribution}
+                    margin={{ top: 16, right: 16, bottom: 8, left: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                    <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                    <YAxis tick={{ fontSize: 12 }} />
+                    <Tooltip />
+                    <Bar dataKey="value" radius={[4, 4, 0, 0]} fill="var(--color-primary)" />
+                  </BarChart>
                 </ClientOnly>
               </div>
             </CardContent>
