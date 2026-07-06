@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TransfersRouteImport } from './routes/transfers'
+import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as MastersRouteImport } from './routes/masters'
 import { Route as MaintenanceRouteImport } from './routes/maintenance'
 import { Route as AssignmentsRouteImport } from './routes/assignments'
@@ -18,6 +19,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as MastersIndexRouteImport } from './routes/masters.index'
 import { Route as AssetsIndexRouteImport } from './routes/assets.index'
 import { Route as MastersVendorsRouteImport } from './routes/masters.vendors'
+import { Route as MastersVendorEvaluationsRouteImport } from './routes/masters.vendor-evaluations'
 import { Route as MastersOfficesRouteImport } from './routes/masters.offices'
 import { Route as MastersEmployeesRouteImport } from './routes/masters.employees'
 import { Route as MastersDepartmentsRouteImport } from './routes/masters.departments'
@@ -29,6 +31,11 @@ import { Route as AssetsIdRouteImport } from './routes/assets.$id'
 const TransfersRoute = TransfersRouteImport.update({
   id: '/transfers',
   path: '/transfers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MastersRoute = MastersRouteImport.update({
@@ -71,6 +78,12 @@ const MastersVendorsRoute = MastersVendorsRouteImport.update({
   path: '/vendors',
   getParentRoute: () => MastersRoute,
 } as any)
+const MastersVendorEvaluationsRoute =
+  MastersVendorEvaluationsRouteImport.update({
+    id: '/vendor-evaluations',
+    path: '/vendor-evaluations',
+    getParentRoute: () => MastersRoute,
+  } as any)
 const MastersOfficesRoute = MastersOfficesRouteImport.update({
   id: '/offices',
   path: '/offices',
@@ -113,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/assignments': typeof AssignmentsRoute
   '/maintenance': typeof MaintenanceRoute
   '/masters': typeof MastersRouteWithChildren
+  '/reports': typeof ReportsRoute
   '/transfers': typeof TransfersRoute
   '/assets/$id': typeof AssetsIdRoute
   '/masters/brands': typeof MastersBrandsRoute
@@ -121,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/masters/departments': typeof MastersDepartmentsRoute
   '/masters/employees': typeof MastersEmployeesRoute
   '/masters/offices': typeof MastersOfficesRoute
+  '/masters/vendor-evaluations': typeof MastersVendorEvaluationsRoute
   '/masters/vendors': typeof MastersVendorsRoute
   '/assets/': typeof AssetsIndexRoute
   '/masters/': typeof MastersIndexRoute
@@ -129,6 +144,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assignments': typeof AssignmentsRoute
   '/maintenance': typeof MaintenanceRoute
+  '/reports': typeof ReportsRoute
   '/transfers': typeof TransfersRoute
   '/assets/$id': typeof AssetsIdRoute
   '/masters/brands': typeof MastersBrandsRoute
@@ -137,6 +153,7 @@ export interface FileRoutesByTo {
   '/masters/departments': typeof MastersDepartmentsRoute
   '/masters/employees': typeof MastersEmployeesRoute
   '/masters/offices': typeof MastersOfficesRoute
+  '/masters/vendor-evaluations': typeof MastersVendorEvaluationsRoute
   '/masters/vendors': typeof MastersVendorsRoute
   '/assets': typeof AssetsIndexRoute
   '/masters': typeof MastersIndexRoute
@@ -148,6 +165,7 @@ export interface FileRoutesById {
   '/assignments': typeof AssignmentsRoute
   '/maintenance': typeof MaintenanceRoute
   '/masters': typeof MastersRouteWithChildren
+  '/reports': typeof ReportsRoute
   '/transfers': typeof TransfersRoute
   '/assets/$id': typeof AssetsIdRoute
   '/masters/brands': typeof MastersBrandsRoute
@@ -156,6 +174,7 @@ export interface FileRoutesById {
   '/masters/departments': typeof MastersDepartmentsRoute
   '/masters/employees': typeof MastersEmployeesRoute
   '/masters/offices': typeof MastersOfficesRoute
+  '/masters/vendor-evaluations': typeof MastersVendorEvaluationsRoute
   '/masters/vendors': typeof MastersVendorsRoute
   '/assets/': typeof AssetsIndexRoute
   '/masters/': typeof MastersIndexRoute
@@ -168,6 +187,7 @@ export interface FileRouteTypes {
     | '/assignments'
     | '/maintenance'
     | '/masters'
+    | '/reports'
     | '/transfers'
     | '/assets/$id'
     | '/masters/brands'
@@ -176,6 +196,7 @@ export interface FileRouteTypes {
     | '/masters/departments'
     | '/masters/employees'
     | '/masters/offices'
+    | '/masters/vendor-evaluations'
     | '/masters/vendors'
     | '/assets/'
     | '/masters/'
@@ -184,6 +205,7 @@ export interface FileRouteTypes {
     | '/'
     | '/assignments'
     | '/maintenance'
+    | '/reports'
     | '/transfers'
     | '/assets/$id'
     | '/masters/brands'
@@ -192,6 +214,7 @@ export interface FileRouteTypes {
     | '/masters/departments'
     | '/masters/employees'
     | '/masters/offices'
+    | '/masters/vendor-evaluations'
     | '/masters/vendors'
     | '/assets'
     | '/masters'
@@ -202,6 +225,7 @@ export interface FileRouteTypes {
     | '/assignments'
     | '/maintenance'
     | '/masters'
+    | '/reports'
     | '/transfers'
     | '/assets/$id'
     | '/masters/brands'
@@ -210,6 +234,7 @@ export interface FileRouteTypes {
     | '/masters/departments'
     | '/masters/employees'
     | '/masters/offices'
+    | '/masters/vendor-evaluations'
     | '/masters/vendors'
     | '/assets/'
     | '/masters/'
@@ -221,6 +246,7 @@ export interface RootRouteChildren {
   AssignmentsRoute: typeof AssignmentsRoute
   MaintenanceRoute: typeof MaintenanceRoute
   MastersRoute: typeof MastersRouteWithChildren
+  ReportsRoute: typeof ReportsRoute
   TransfersRoute: typeof TransfersRoute
 }
 
@@ -231,6 +257,13 @@ declare module '@tanstack/react-router' {
       path: '/transfers'
       fullPath: '/transfers'
       preLoaderRoute: typeof TransfersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/masters': {
@@ -287,6 +320,13 @@ declare module '@tanstack/react-router' {
       path: '/vendors'
       fullPath: '/masters/vendors'
       preLoaderRoute: typeof MastersVendorsRouteImport
+      parentRoute: typeof MastersRoute
+    }
+    '/masters/vendor-evaluations': {
+      id: '/masters/vendor-evaluations'
+      path: '/vendor-evaluations'
+      fullPath: '/masters/vendor-evaluations'
+      preLoaderRoute: typeof MastersVendorEvaluationsRouteImport
       parentRoute: typeof MastersRoute
     }
     '/masters/offices': {
@@ -361,6 +401,7 @@ interface MastersRouteChildren {
   MastersDepartmentsRoute: typeof MastersDepartmentsRoute
   MastersEmployeesRoute: typeof MastersEmployeesRoute
   MastersOfficesRoute: typeof MastersOfficesRoute
+  MastersVendorEvaluationsRoute: typeof MastersVendorEvaluationsRoute
   MastersVendorsRoute: typeof MastersVendorsRoute
   MastersIndexRoute: typeof MastersIndexRoute
 }
@@ -372,6 +413,7 @@ const MastersRouteChildren: MastersRouteChildren = {
   MastersDepartmentsRoute: MastersDepartmentsRoute,
   MastersEmployeesRoute: MastersEmployeesRoute,
   MastersOfficesRoute: MastersOfficesRoute,
+  MastersVendorEvaluationsRoute: MastersVendorEvaluationsRoute,
   MastersVendorsRoute: MastersVendorsRoute,
   MastersIndexRoute: MastersIndexRoute,
 }
@@ -385,6 +427,7 @@ const rootRouteChildren: RootRouteChildren = {
   AssignmentsRoute: AssignmentsRoute,
   MaintenanceRoute: MaintenanceRoute,
   MastersRoute: MastersRouteWithChildren,
+  ReportsRoute: ReportsRoute,
   TransfersRoute: TransfersRoute,
 }
 export const routeTree = rootRouteImport

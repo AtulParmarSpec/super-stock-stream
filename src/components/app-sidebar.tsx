@@ -12,6 +12,7 @@ import {
   Package,
   Settings,
   Shield,
+  Star,
   Users,
   Wrench,
 } from "lucide-react";
@@ -52,6 +53,7 @@ const masterNav: NavItem[] = [
   { title: "Departments", url: "/masters/departments", icon: Users },
   { title: "Employees", url: "/masters/employees", icon: Users },
   { title: "Vendors", url: "/masters/vendors", icon: Box },
+  { title: "Vendor Evaluations", url: "/masters/vendor-evaluations", icon: Star },
   { title: "Categories", url: "/masters/categories", icon: Layers },
   { title: "Brands & Models", url: "/masters/brands", icon: Cpu },
 ];

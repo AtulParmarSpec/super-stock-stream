@@ -1,69 +1,41 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
-} from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { Plus, Search } from "lucide-react";
-import { vendors } from "@/lib/operations-data";
-import { PageShell, ToneBadge } from "@/components/page-shell";
+import { Star } from "lucide-react";
+import { MasterPage } from "@/components/master-page";
+import { vendors, type Vendor } from "@/lib/operations-data";
 
 export const Route = createFileRoute("/masters/vendors")({
   head: () => ({ meta: [{ title: "Vendors — AssetFlow" }] }),
-  component: VendorsMaster,
-});
-
-function VendorsMaster() {
-  const [q, setQ] = useState("");
-  const rows = useMemo(
-    () => vendors.filter((v) =>
-      q.trim() === "" || [v.code, v.name, v.category, v.contact].some((val) => val.toLowerCase().includes(q.toLowerCase()))
-    ),
-    [q]
-  );
-  return (
-    <PageShell
+  component: () => (
+    <MasterPage<Vendor>
       title="Vendors"
       description="Suppliers, resellers, and MSPs with active SLAs."
-      actions={<Button size="sm"><Plus className="mr-2 h-4 w-4" /> New Vendor</Button>}
-    >
-      <div className="flex rounded-lg border border-border bg-card p-4 shadow-sm">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input placeholder="Search vendors..." value={q} onChange={(e) => setQ(e.target.value)} className="pl-9" />
-        </div>
-      </div>
-      <div className="rounded-lg border border-border bg-card shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="w-24">Code</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Contact</TableHead>
-              <TableHead>SLA Tier</TableHead>
-              <TableHead className="text-right">Contracts</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {rows.map((v) => (
-              <TableRow key={v.id}>
-                <TableCell className="font-mono text-xs font-medium">{v.code}</TableCell>
-                <TableCell className="font-medium text-foreground">{v.name}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">{v.category}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">{v.contact}</TableCell>
-                <TableCell>
-                  <ToneBadge tone={v.slaTier === "Platinum" ? "primary" : v.slaTier === "Gold" ? "warning" : "muted"}>
-                    {v.slaTier}
-                  </ToneBadge>
-                </TableCell>
-                <TableCell className="text-right text-sm text-foreground">{v.activeContracts}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    </PageShell>
-  );
-}
+      entityLabel="Vendor"
+      data={vendors}
+      idPrefix="vnd"
+      searchKeys={["code", "name", "category", "contact"]}
+      extraActions={
+        <Button variant="outline" size="sm" asChild>
+          <Link to="/masters/vendor-evaluations"><Star className="mr-2 h-4 w-4" /> Vendor Evaluations</Link>
+        </Button>
+      }
+      columns={[
+        { key: "code", header: "Code", className: "font-mono text-xs font-medium" },
+        { key: "name", header: "Name", className: "font-medium text-foreground" },
+        { key: "category", header: "Category" },
+        { key: "contact", header: "Contact", className: "text-xs text-muted-foreground" },
+        { key: "slaTier", header: "SLA Tier" },
+        { key: "activeContracts", header: "Contracts", align: "right" },
+      ]}
+      fields={[
+        { key: "code", label: "Code", required: true },
+        { key: "name", label: "Name", required: true },
+        { key: "category", label: "Category", type: "select", options: ["Hardware", "Software", "Networking", "Server / Storage", "Peripherals", "Security", "Services"] },
+        { key: "contact", label: "Contact" },
+        { key: "slaTier", label: "SLA Tier", type: "select", options: ["Platinum", "Gold", "Silver"] },
+        { key: "activeContracts", label: "Active Contracts", type: "number" },
+      ]}
+      makeDefaults={() => ({ slaTier: "Silver", activeContracts: 0 })}
+    />
+  ),
+});
