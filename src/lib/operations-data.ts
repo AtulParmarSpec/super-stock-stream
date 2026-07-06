@@ -177,3 +177,40 @@ export const brandModels: BrandModel[] = [
   { id: "bm-13", brand: "Logitech", model: "MX Keys S + MX Master 3S", category: "Peripheral", skuCount: 3 },
   { id: "bm-14", brand: "Yubico", model: "YubiKey 5 NFC", category: "Peripheral", skuCount: 2 },
 ];
+
+// ============ VENDOR EVALUATIONS ============
+
+export interface VendorEvaluation {
+  id: string;
+  vendor: string;
+  period: string;
+  delivery: number;
+  quality: number;
+  pricing: number;
+  support: number;
+  compliance: number;
+  overall: number;
+  remarks: string;
+}
+
+export const evaluationWeights = {
+  delivery: 25,
+  quality: 25,
+  pricing: 20,
+  support: 15,
+  compliance: 15,
+};
+
+export function computeOverall(v: Omit<VendorEvaluation, "id" | "vendor" | "period" | "overall" | "remarks">): number {
+  const w = evaluationWeights;
+  return Math.round(
+    (v.delivery * w.delivery + v.quality * w.quality + v.pricing * w.pricing + v.support * w.support + v.compliance * w.compliance) /
+      100 * 10,
+  ) / 10;
+}
+
+export const vendorEvaluations: VendorEvaluation[] = [
+  { id: "ve-1", vendor: "OfficeMart Wholesale", period: "Q3-2026", delivery: 90, quality: 57, pricing: 88, support: 63, compliance: 95, overall: 78.0, remarks: "" },
+  { id: "ve-2", vendor: "PrimeCompute Distributors", period: "Q1-2026", delivery: 65, quality: 70, pricing: 75, support: 60, compliance: 80, overall: 69.5, remarks: "Support turnaround needs improvement." },
+  { id: "ve-3", vendor: "TechSupplies Pvt Ltd", period: "Q1-2026", delivery: 92, quality: 88, pricing: 80, support: 85, compliance: 95, overall: 88.0, remarks: "Consistent delivery, minor pricing gaps." },
+];
