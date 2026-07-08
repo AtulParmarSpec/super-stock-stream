@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TransfersRouteImport } from './routes/transfers'
+import { Route as RequestsRouteImport } from './routes/requests'
 import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as ReceiptsRouteImport } from './routes/receipts'
+import { Route as QuotationsRouteImport } from './routes/quotations'
+import { Route as PurchaseOrdersRouteImport } from './routes/purchase-orders'
 import { Route as MastersRouteImport } from './routes/masters'
 import { Route as MaintenanceRouteImport } from './routes/maintenance'
+import { Route as BillsRouteImport } from './routes/bills'
 import { Route as AssignmentsRouteImport } from './routes/assignments'
 import { Route as AssetsRouteImport } from './routes/assets'
+import { Route as ApprovalsRouteImport } from './routes/approvals'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MastersIndexRouteImport } from './routes/masters.index'
 import { Route as AssetsIndexRouteImport } from './routes/assets.index'
@@ -33,9 +39,29 @@ const TransfersRoute = TransfersRouteImport.update({
   path: '/transfers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RequestsRoute = RequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReportsRoute = ReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReceiptsRoute = ReceiptsRouteImport.update({
+  id: '/receipts',
+  path: '/receipts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuotationsRoute = QuotationsRouteImport.update({
+  id: '/quotations',
+  path: '/quotations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PurchaseOrdersRoute = PurchaseOrdersRouteImport.update({
+  id: '/purchase-orders',
+  path: '/purchase-orders',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MastersRoute = MastersRouteImport.update({
@@ -48,6 +74,11 @@ const MaintenanceRoute = MaintenanceRouteImport.update({
   path: '/maintenance',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BillsRoute = BillsRouteImport.update({
+  id: '/bills',
+  path: '/bills',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AssignmentsRoute = AssignmentsRouteImport.update({
   id: '/assignments',
   path: '/assignments',
@@ -56,6 +87,11 @@ const AssignmentsRoute = AssignmentsRouteImport.update({
 const AssetsRoute = AssetsRouteImport.update({
   id: '/assets',
   path: '/assets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApprovalsRoute = ApprovalsRouteImport.update({
+  id: '/approvals',
+  path: '/approvals',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -122,11 +158,17 @@ const AssetsIdRoute = AssetsIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/approvals': typeof ApprovalsRoute
   '/assets': typeof AssetsRouteWithChildren
   '/assignments': typeof AssignmentsRoute
+  '/bills': typeof BillsRoute
   '/maintenance': typeof MaintenanceRoute
   '/masters': typeof MastersRouteWithChildren
+  '/purchase-orders': typeof PurchaseOrdersRoute
+  '/quotations': typeof QuotationsRoute
+  '/receipts': typeof ReceiptsRoute
   '/reports': typeof ReportsRoute
+  '/requests': typeof RequestsRoute
   '/transfers': typeof TransfersRoute
   '/assets/$id': typeof AssetsIdRoute
   '/masters/brands': typeof MastersBrandsRoute
@@ -142,9 +184,15 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/approvals': typeof ApprovalsRoute
   '/assignments': typeof AssignmentsRoute
+  '/bills': typeof BillsRoute
   '/maintenance': typeof MaintenanceRoute
+  '/purchase-orders': typeof PurchaseOrdersRoute
+  '/quotations': typeof QuotationsRoute
+  '/receipts': typeof ReceiptsRoute
   '/reports': typeof ReportsRoute
+  '/requests': typeof RequestsRoute
   '/transfers': typeof TransfersRoute
   '/assets/$id': typeof AssetsIdRoute
   '/masters/brands': typeof MastersBrandsRoute
@@ -161,11 +209,17 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/approvals': typeof ApprovalsRoute
   '/assets': typeof AssetsRouteWithChildren
   '/assignments': typeof AssignmentsRoute
+  '/bills': typeof BillsRoute
   '/maintenance': typeof MaintenanceRoute
   '/masters': typeof MastersRouteWithChildren
+  '/purchase-orders': typeof PurchaseOrdersRoute
+  '/quotations': typeof QuotationsRoute
+  '/receipts': typeof ReceiptsRoute
   '/reports': typeof ReportsRoute
+  '/requests': typeof RequestsRoute
   '/transfers': typeof TransfersRoute
   '/assets/$id': typeof AssetsIdRoute
   '/masters/brands': typeof MastersBrandsRoute
@@ -183,11 +237,17 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/approvals'
     | '/assets'
     | '/assignments'
+    | '/bills'
     | '/maintenance'
     | '/masters'
+    | '/purchase-orders'
+    | '/quotations'
+    | '/receipts'
     | '/reports'
+    | '/requests'
     | '/transfers'
     | '/assets/$id'
     | '/masters/brands'
@@ -203,9 +263,15 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/approvals'
     | '/assignments'
+    | '/bills'
     | '/maintenance'
+    | '/purchase-orders'
+    | '/quotations'
+    | '/receipts'
     | '/reports'
+    | '/requests'
     | '/transfers'
     | '/assets/$id'
     | '/masters/brands'
@@ -221,11 +287,17 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/approvals'
     | '/assets'
     | '/assignments'
+    | '/bills'
     | '/maintenance'
     | '/masters'
+    | '/purchase-orders'
+    | '/quotations'
+    | '/receipts'
     | '/reports'
+    | '/requests'
     | '/transfers'
     | '/assets/$id'
     | '/masters/brands'
@@ -242,11 +314,17 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApprovalsRoute: typeof ApprovalsRoute
   AssetsRoute: typeof AssetsRouteWithChildren
   AssignmentsRoute: typeof AssignmentsRoute
+  BillsRoute: typeof BillsRoute
   MaintenanceRoute: typeof MaintenanceRoute
   MastersRoute: typeof MastersRouteWithChildren
+  PurchaseOrdersRoute: typeof PurchaseOrdersRoute
+  QuotationsRoute: typeof QuotationsRoute
+  ReceiptsRoute: typeof ReceiptsRoute
   ReportsRoute: typeof ReportsRoute
+  RequestsRoute: typeof RequestsRoute
   TransfersRoute: typeof TransfersRoute
 }
 
@@ -259,11 +337,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TransfersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/requests': {
+      id: '/requests'
+      path: '/requests'
+      fullPath: '/requests'
+      preLoaderRoute: typeof RequestsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reports': {
       id: '/reports'
       path: '/reports'
       fullPath: '/reports'
       preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/receipts': {
+      id: '/receipts'
+      path: '/receipts'
+      fullPath: '/receipts'
+      preLoaderRoute: typeof ReceiptsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quotations': {
+      id: '/quotations'
+      path: '/quotations'
+      fullPath: '/quotations'
+      preLoaderRoute: typeof QuotationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/purchase-orders': {
+      id: '/purchase-orders'
+      path: '/purchase-orders'
+      fullPath: '/purchase-orders'
+      preLoaderRoute: typeof PurchaseOrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/masters': {
@@ -280,6 +386,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MaintenanceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bills': {
+      id: '/bills'
+      path: '/bills'
+      fullPath: '/bills'
+      preLoaderRoute: typeof BillsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/assignments': {
       id: '/assignments'
       path: '/assignments'
@@ -292,6 +405,13 @@ declare module '@tanstack/react-router' {
       path: '/assets'
       fullPath: '/assets'
       preLoaderRoute: typeof AssetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/approvals': {
+      id: '/approvals'
+      path: '/approvals'
+      fullPath: '/approvals'
+      preLoaderRoute: typeof ApprovalsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -423,11 +543,17 @@ const MastersRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApprovalsRoute: ApprovalsRoute,
   AssetsRoute: AssetsRouteWithChildren,
   AssignmentsRoute: AssignmentsRoute,
+  BillsRoute: BillsRoute,
   MaintenanceRoute: MaintenanceRoute,
   MastersRoute: MastersRouteWithChildren,
+  PurchaseOrdersRoute: PurchaseOrdersRoute,
+  QuotationsRoute: QuotationsRoute,
+  ReceiptsRoute: ReceiptsRoute,
   ReportsRoute: ReportsRoute,
+  RequestsRoute: RequestsRoute,
   TransfersRoute: TransfersRoute,
 }
 export const routeTree = rootRouteImport

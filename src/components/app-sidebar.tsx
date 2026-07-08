@@ -4,14 +4,21 @@ import {
   Box,
   Briefcase,
   Building2,
+  CheckSquare,
+  ClipboardList,
   Cpu,
+  FileSignature,
   FileText,
+  Inbox,
   Layers,
   LayoutDashboard,
   MapPin,
   Package,
+  PackageCheck,
+  Receipt,
   Settings,
   Shield,
+  ShoppingCart,
   Star,
   Users,
   Wrench,
@@ -47,6 +54,15 @@ const mainNav: NavItem[] = [
   { title: "Reports", url: "/reports", icon: FileText },
 ];
 
+const procurementNav: NavItem[] = [
+  { title: "Requests", url: "/requests", icon: Inbox },
+  { title: "My Approvals", url: "/approvals", icon: CheckSquare },
+  { title: "Quotations", url: "/quotations", icon: FileSignature },
+  { title: "Purchase Orders", url: "/purchase-orders", icon: ShoppingCart },
+  { title: "Goods Receipts", url: "/receipts", icon: PackageCheck },
+  { title: "Bills", url: "/bills", icon: Receipt },
+];
+
 const masterNav: NavItem[] = [
   { title: "Companies", url: "/masters/companies", icon: Building2 },
   { title: "Offices", url: "/masters/offices", icon: MapPin },
@@ -61,8 +77,10 @@ const masterNav: NavItem[] = [
 const adminNav: NavItem[] = [
   { title: "Users & Roles", url: "/admin/users", icon: Shield },
   { title: "Settings", url: "/admin/settings", icon: Settings },
-  { title: "Audit Log", url: "/admin/audit", icon: BarChart3 },
+  { title: "Audit Log", url: "/admin/audit", icon: ClipboardList },
+  { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
 ];
+
 
 export function AppSidebar() {
   const { state } = useSidebar();
