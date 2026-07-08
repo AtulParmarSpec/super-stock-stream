@@ -138,6 +138,30 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
+          <SidebarGroupLabel>Procurement</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {procurementNav.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                    <Link
+                      to={item.url}
+                      className={cn(
+                        "flex items-center gap-3",
+                        isActive(item.url) && "font-medium"
+                      )}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
           <SidebarGroupLabel>Masters</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -160,6 +184,7 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
 
         <SidebarGroup>
           <SidebarGroupLabel>Administration</SidebarGroupLabel>
