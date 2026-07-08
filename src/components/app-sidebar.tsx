@@ -4,14 +4,21 @@ import {
   Box,
   Briefcase,
   Building2,
+  CheckSquare,
+  ClipboardList,
   Cpu,
+  FileSignature,
   FileText,
+  Inbox,
   Layers,
   LayoutDashboard,
   MapPin,
   Package,
+  PackageCheck,
+  Receipt,
   Settings,
   Shield,
+  ShoppingCart,
   Star,
   Users,
   Wrench,
@@ -47,6 +54,15 @@ const mainNav: NavItem[] = [
   { title: "Reports", url: "/reports", icon: FileText },
 ];
 
+const procurementNav: NavItem[] = [
+  { title: "Requests", url: "/requests", icon: Inbox },
+  { title: "My Approvals", url: "/approvals", icon: CheckSquare },
+  { title: "Quotations", url: "/quotations", icon: FileSignature },
+  { title: "Purchase Orders", url: "/purchase-orders", icon: ShoppingCart },
+  { title: "Goods Receipts", url: "/receipts", icon: PackageCheck },
+  { title: "Bills", url: "/bills", icon: Receipt },
+];
+
 const masterNav: NavItem[] = [
   { title: "Companies", url: "/masters/companies", icon: Building2 },
   { title: "Offices", url: "/masters/offices", icon: MapPin },
@@ -61,8 +77,10 @@ const masterNav: NavItem[] = [
 const adminNav: NavItem[] = [
   { title: "Users & Roles", url: "/admin/users", icon: Shield },
   { title: "Settings", url: "/admin/settings", icon: Settings },
-  { title: "Audit Log", url: "/admin/audit", icon: BarChart3 },
+  { title: "Audit Log", url: "/admin/audit", icon: ClipboardList },
+  { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
 ];
+
 
 export function AppSidebar() {
   const { state } = useSidebar();
@@ -120,6 +138,30 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
+          <SidebarGroupLabel>Procurement</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {procurementNav.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                    <Link
+                      to={item.url}
+                      className={cn(
+                        "flex items-center gap-3",
+                        isActive(item.url) && "font-medium"
+                      )}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
           <SidebarGroupLabel>Masters</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -142,6 +184,7 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
 
         <SidebarGroup>
           <SidebarGroupLabel>Administration</SidebarGroupLabel>
