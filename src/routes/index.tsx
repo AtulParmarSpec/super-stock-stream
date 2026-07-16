@@ -39,7 +39,9 @@ import {
   type AssetStatus,
 } from "@/lib/inventory-data";
 import { employees } from "@/lib/operations-data";
+import { approvals } from "@/lib/procurement-data";
 import { useStore } from "@/lib/store";
+
 import {
   PieChart,
   Pie,
@@ -138,6 +140,10 @@ function DashboardPage() {
         {drill && drill !== "total" && drill !== "assigned" && (
           <SimpleStatusDrill drill={drill} onClose={() => setDrill(null)} />
         )}
+
+        <MyPendingActions />
+
+
 
         <section className="grid gap-6 lg:grid-cols-3">
           <Card className="lg:col-span-2">
