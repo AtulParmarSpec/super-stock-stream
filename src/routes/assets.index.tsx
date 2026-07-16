@@ -13,7 +13,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import {
-  ChevronLeft, ChevronRight, Download, Filter, Layers, MoreHorizontal, Plus, Search, SlidersHorizontal,
+  ChevronLeft, ChevronRight, Download, Filter, Layers, MoreHorizontal, Plus, Search, SlidersHorizontal, Upload,
 } from "lucide-react";
 import {
   assets, inventoryGroups, type AssetStatus, type AssetCategory,
@@ -21,6 +21,8 @@ import {
 import { cn } from "@/lib/utils";
 import { useStore } from "@/lib/store";
 import { AssetFormDialog } from "@/components/dialogs";
+import { BulkImportDialog } from "@/components/bulk-import-dialog";
+
 
 export const Route = createFileRoute("/assets/")({
   head: () => ({
@@ -51,6 +53,8 @@ function AssetsPage() {
   const [groupFilter, setGroupFilter] = useState<string>("all");
   const [page, setPage] = useState(1);
   const [addOpen, setAddOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
+
 
   const filtered = useMemo(() => {
     return assets.filter((asset) => {
@@ -82,9 +86,13 @@ function AssetsPage() {
           <Button variant="outline" size="sm" onClick={() => exportCsv(filtered)}>
             <Download className="mr-2 h-4 w-4" /> Export
           </Button>
+          <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}>
+            <Upload className="mr-2 h-4 w-4" /> Bulk Import
+          </Button>
           <Button size="sm" onClick={() => setAddOpen(true)}>
             <Plus className="mr-2 h-4 w-4" /> Add Asset
           </Button>
+
         </div>
       </div>
 
@@ -203,6 +211,8 @@ function AssetsPage() {
       </div>
 
       <AssetFormDialog open={addOpen} onOpenChange={setAddOpen} />
+      <BulkImportDialog open={importOpen} onOpenChange={setImportOpen} />
+
     </div>
   );
 }

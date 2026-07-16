@@ -21,7 +21,14 @@ export const Route = createFileRoute("/masters/vendors")({
       }
       columns={[
         { key: "code", header: "Code", className: "font-mono text-xs font-medium" },
-        { key: "name", header: "Name", className: "font-medium text-foreground" },
+        {
+          key: "name", header: "Name", className: "font-medium",
+          render: (row) => (
+            <Link to="/masters/vendors/$id" params={{ id: row.id }} className="text-foreground hover:text-primary hover:underline">
+              {row.name}
+            </Link>
+          ),
+        },
         { key: "category", header: "Category" },
         { key: "contact", header: "Contact", className: "text-xs text-muted-foreground" },
         { key: "slaTier", header: "SLA Tier" },
@@ -39,3 +46,4 @@ export const Route = createFileRoute("/masters/vendors")({
     />
   ),
 });
+

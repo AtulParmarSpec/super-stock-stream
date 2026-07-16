@@ -3,7 +3,7 @@ import { useParams } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   ArrowLeft, Briefcase, Building2, Calendar, CalendarClock, CreditCard, Edit, FileText,
-  MapPin, MoreHorizontal, Package, Printer, RotateCcw, Trash2, Wrench,
+  MapPin, MoreHorizontal, Package, QrCode, RotateCcw, Trash2, Wrench,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +14,8 @@ import { assets, getAssetById, type AssetStatus } from "@/lib/inventory-data";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/lib/store";
 import { AssetActionDialog, AssetFormDialog, type AssetAction } from "@/components/dialogs";
+import { QrLabelDialog } from "@/components/qr-label-dialog";
+
 
 export const Route = createFileRoute("/assets/$id")({
   head: () => ({
@@ -48,6 +50,8 @@ function AssetDetailPage() {
   const asset = assets.find((a) => a.id === id);
   const [action, setAction] = useState<AssetAction | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+  const [qrOpen, setQrOpen] = useState(false);
+
 
   if (!asset) return <AssetNotFound />;
 
@@ -91,9 +95,10 @@ function AssetDetailPage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => window.print()}>
-            <Printer className="mr-2 h-4 w-4" /> Print
+          <Button variant="outline" size="sm" onClick={() => setQrOpen(true)}>
+            <QrCode className="mr-2 h-4 w-4" /> Print QR Tag
           </Button>
+
           <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
             <Edit className="mr-2 h-4 w-4" /> Edit
           </Button>
@@ -200,9 +205,11 @@ function AssetDetailPage() {
 
       <AssetActionDialog asset={asset} action={action} open={!!action} onOpenChange={(o) => !o && setAction(null)} />
       <AssetFormDialog open={editOpen} onOpenChange={setEditOpen} editing={asset} />
+      <QrLabelDialog asset={asset} open={qrOpen} onOpenChange={setQrOpen} />
     </div>
   );
 }
+
 
 function StatusBadge({ status }: { status: AssetStatus }) {
   const variants: Record<AssetStatus, string> = {
