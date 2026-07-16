@@ -145,7 +145,10 @@ function ReportsPage() {
               <SelectItem value="status">By Status</SelectItem>
               <SelectItem value="vendor">Vendor Spend</SelectItem>
               <SelectItem value="maintenance">Maintenance</SelectItem>
+              <SelectItem value="poAging">PO Aging</SelectItem>
+              <SelectItem value="billAging">Bill Aging</SelectItem>
             </SelectContent>
+
           </Select>
           <Button variant="outline" size="sm" onClick={exportReport}><Download className="mr-2 h-4 w-4" /> Export CSV</Button>
         </>
