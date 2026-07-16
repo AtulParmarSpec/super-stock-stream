@@ -39,7 +39,9 @@ import {
   type AssetStatus,
 } from "@/lib/inventory-data";
 import { employees } from "@/lib/operations-data";
+import { approvals } from "@/lib/procurement-data";
 import { useStore } from "@/lib/store";
+
 import {
   PieChart,
   Pie,
@@ -138,6 +140,10 @@ function DashboardPage() {
         {drill && drill !== "total" && drill !== "assigned" && (
           <SimpleStatusDrill drill={drill} onClose={() => setDrill(null)} />
         )}
+
+        <MyPendingActions />
+
+
 
         <section className="grid gap-6 lg:grid-cols-3">
           <Card className="lg:col-span-2">
@@ -535,3 +541,46 @@ function StatusDot({ status }: { status: string }) {
 
   return <span className={cn("h-2.5 w-2.5 rounded-full", color)} />;
 }
+
+function MyPendingActions() {
+  const pending = approvals.filter((a) => a.decision === "Pending");
+  const overdue = pending.filter((a) => new Date(a.slaDueOn).getTime() < Date.now()).length;
+  const byType = (t: string) => pending.filter((a) => a.entityType === t).length;
+  const tiles = [
+    { label: "Requests", count: byType("Request") },
+    { label: "Quotations", count: byType("Quotation") },
+    { label: "POs", count: byType("PO") },
+    { label: "Bills", count: byType("Bill") },
+  ];
+
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-start justify-between pb-2">
+        <div>
+          <CardTitle className="text-base font-semibold">My Pending Actions</CardTitle>
+          <CardDescription>
+            {pending.length} awaiting decision{overdue ? ` · ${overdue} past SLA` : ""}
+          </CardDescription>
+        </div>
+        <Button size="sm" variant="outline" asChild>
+          <Link to="/approvals">Open inbox</Link>
+        </Button>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {tiles.map((t) => (
+            <Link
+              key={t.label}
+              to="/approvals"
+              className="rounded-lg border border-border bg-card p-4 transition-colors hover:border-primary/50"
+            >
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t.label}</p>
+              <p className={cn("mt-1 text-2xl font-semibold", t.count > 0 ? "text-primary" : "text-foreground")}>{t.count}</p>
+            </Link>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+

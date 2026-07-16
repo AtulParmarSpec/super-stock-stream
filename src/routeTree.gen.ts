@@ -33,6 +33,7 @@ import { Route as MastersCompaniesRouteImport } from './routes/masters.companies
 import { Route as MastersCategoriesRouteImport } from './routes/masters.categories'
 import { Route as MastersBrandsRouteImport } from './routes/masters.brands'
 import { Route as AssetsIdRouteImport } from './routes/assets.$id'
+import { Route as MastersVendorsIdRouteImport } from './routes/masters.vendors.$id'
 
 const TransfersRoute = TransfersRouteImport.update({
   id: '/transfers',
@@ -155,6 +156,11 @@ const AssetsIdRoute = AssetsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AssetsRoute,
 } as any)
+const MastersVendorsIdRoute = MastersVendorsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => MastersVendorsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -178,9 +184,10 @@ export interface FileRoutesByFullPath {
   '/masters/employees': typeof MastersEmployeesRoute
   '/masters/offices': typeof MastersOfficesRoute
   '/masters/vendor-evaluations': typeof MastersVendorEvaluationsRoute
-  '/masters/vendors': typeof MastersVendorsRoute
+  '/masters/vendors': typeof MastersVendorsRouteWithChildren
   '/assets/': typeof AssetsIndexRoute
   '/masters/': typeof MastersIndexRoute
+  '/masters/vendors/$id': typeof MastersVendorsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -202,9 +209,10 @@ export interface FileRoutesByTo {
   '/masters/employees': typeof MastersEmployeesRoute
   '/masters/offices': typeof MastersOfficesRoute
   '/masters/vendor-evaluations': typeof MastersVendorEvaluationsRoute
-  '/masters/vendors': typeof MastersVendorsRoute
+  '/masters/vendors': typeof MastersVendorsRouteWithChildren
   '/assets': typeof AssetsIndexRoute
   '/masters': typeof MastersIndexRoute
+  '/masters/vendors/$id': typeof MastersVendorsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -229,9 +237,10 @@ export interface FileRoutesById {
   '/masters/employees': typeof MastersEmployeesRoute
   '/masters/offices': typeof MastersOfficesRoute
   '/masters/vendor-evaluations': typeof MastersVendorEvaluationsRoute
-  '/masters/vendors': typeof MastersVendorsRoute
+  '/masters/vendors': typeof MastersVendorsRouteWithChildren
   '/assets/': typeof AssetsIndexRoute
   '/masters/': typeof MastersIndexRoute
+  '/masters/vendors/$id': typeof MastersVendorsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -260,6 +269,7 @@ export interface FileRouteTypes {
     | '/masters/vendors'
     | '/assets/'
     | '/masters/'
+    | '/masters/vendors/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -284,6 +294,7 @@ export interface FileRouteTypes {
     | '/masters/vendors'
     | '/assets'
     | '/masters'
+    | '/masters/vendors/$id'
   id:
     | '__root__'
     | '/'
@@ -310,6 +321,7 @@ export interface FileRouteTypes {
     | '/masters/vendors'
     | '/assets/'
     | '/masters/'
+    | '/masters/vendors/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -498,6 +510,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AssetsIdRouteImport
       parentRoute: typeof AssetsRoute
     }
+    '/masters/vendors/$id': {
+      id: '/masters/vendors/$id'
+      path: '/$id'
+      fullPath: '/masters/vendors/$id'
+      preLoaderRoute: typeof MastersVendorsIdRouteImport
+      parentRoute: typeof MastersVendorsRoute
+    }
   }
 }
 
@@ -514,6 +533,18 @@ const AssetsRouteChildren: AssetsRouteChildren = {
 const AssetsRouteWithChildren =
   AssetsRoute._addFileChildren(AssetsRouteChildren)
 
+interface MastersVendorsRouteChildren {
+  MastersVendorsIdRoute: typeof MastersVendorsIdRoute
+}
+
+const MastersVendorsRouteChildren: MastersVendorsRouteChildren = {
+  MastersVendorsIdRoute: MastersVendorsIdRoute,
+}
+
+const MastersVendorsRouteWithChildren = MastersVendorsRoute._addFileChildren(
+  MastersVendorsRouteChildren,
+)
+
 interface MastersRouteChildren {
   MastersBrandsRoute: typeof MastersBrandsRoute
   MastersCategoriesRoute: typeof MastersCategoriesRoute
@@ -522,7 +553,7 @@ interface MastersRouteChildren {
   MastersEmployeesRoute: typeof MastersEmployeesRoute
   MastersOfficesRoute: typeof MastersOfficesRoute
   MastersVendorEvaluationsRoute: typeof MastersVendorEvaluationsRoute
-  MastersVendorsRoute: typeof MastersVendorsRoute
+  MastersVendorsRoute: typeof MastersVendorsRouteWithChildren
   MastersIndexRoute: typeof MastersIndexRoute
 }
 
@@ -534,7 +565,7 @@ const MastersRouteChildren: MastersRouteChildren = {
   MastersEmployeesRoute: MastersEmployeesRoute,
   MastersOfficesRoute: MastersOfficesRoute,
   MastersVendorEvaluationsRoute: MastersVendorEvaluationsRoute,
-  MastersVendorsRoute: MastersVendorsRoute,
+  MastersVendorsRoute: MastersVendorsRouteWithChildren,
   MastersIndexRoute: MastersIndexRoute,
 }
 

@@ -11,7 +11,9 @@ import {
 } from "recharts";
 import { assets, inventoryGroups, type AssetStatus } from "@/lib/inventory-data";
 import { maintenanceTickets, vendors } from "@/lib/operations-data";
+import { purchaseOrders, bills } from "@/lib/procurement-data";
 import { useStore } from "@/lib/store";
+
 
 export const Route = createFileRoute("/reports")({
   head: () => ({
@@ -72,8 +74,40 @@ function ReportsPage() {
     return Array.from(map.entries()).map(([name, count], i) => ({ name, count, fill: palette[i % palette.length] }));
   }, []);
 
+  const agingBuckets = ["0-15d", "16-30d", "31-60d", "61-90d", "90+d"];
+  function bucket(days: number) {
+    if (days <= 15) return agingBuckets[0];
+    if (days <= 30) return agingBuckets[1];
+    if (days <= 60) return agingBuckets[2];
+    if (days <= 90) return agingBuckets[3];
+    return agingBuckets[4];
+  }
+
+  const poAging = useMemo(() => {
+    const open = purchaseOrders.filter((p) => p.status !== "Fully Received" && p.status !== "Closed" && p.status !== "Cancelled");
+    const map = new Map(agingBuckets.map((b) => [b, { name: b, count: 0, value: 0 }]));
+    for (const p of open) {
+      const age = Math.max(0, Math.floor((Date.now() - new Date(p.createdOn).getTime()) / 86400000));
+      const b = map.get(bucket(age))!;
+      b.count++; b.value += p.totalAmount;
+    }
+    return Array.from(map.values());
+  }, []);
+
+  const billAging = useMemo(() => {
+    const open = bills.filter((b) => b.status !== "Paid");
+    const map = new Map(agingBuckets.map((b) => [b, { name: b, count: 0, value: 0 }]));
+    for (const b of open) {
+      const overdue = Math.max(0, Math.floor((Date.now() - new Date(b.dueDate).getTime()) / 86400000));
+      const bucketRow = map.get(bucket(overdue))!;
+      bucketRow.count++; bucketRow.value += b.amount + b.tax;
+    }
+    return Array.from(map.values());
+  }, []);
+
   const totalValue = assets.reduce((s, a) => s + a.cost, 0);
   const activeAssets = assets.filter((a) => a.status !== "Scrapped" && a.status !== "Retired" && a.status !== "Lost").length;
+
 
   function exportReport() {
     const map: Record<string, { name: string; [k: string]: number | string }[]> = {
@@ -82,7 +116,10 @@ function ReportsPage() {
       status: byStatus.map((s) => ({ name: s.name, count: s.value })),
       vendor: byVendor.map((v) => ({ name: v.name, spend: v.value })),
       maintenance: maintenanceByStatus.map((m) => ({ name: m.name, count: m.count })),
+      poAging: poAging.map((b) => ({ name: b.name, count: b.count, value: b.value })),
+      billAging: billAging.map((b) => ({ name: b.name, count: b.count, value: b.value })),
     };
+
     const rows = map[report] ?? [];
     if (!rows.length) return;
     const headers = Object.keys(rows[0]);
@@ -108,7 +145,10 @@ function ReportsPage() {
               <SelectItem value="status">By Status</SelectItem>
               <SelectItem value="vendor">Vendor Spend</SelectItem>
               <SelectItem value="maintenance">Maintenance</SelectItem>
+              <SelectItem value="poAging">PO Aging</SelectItem>
+              <SelectItem value="billAging">Bill Aging</SelectItem>
             </SelectContent>
+
           </Select>
           <Button variant="outline" size="sm" onClick={exportReport}><Download className="mr-2 h-4 w-4" /> Export CSV</Button>
         </>
@@ -247,6 +287,40 @@ function ReportsPage() {
           </CardContent>
         </Card>
       )}
+
+      {(report === "poAging" || report === "billAging") && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-semibold">
+              {report === "poAging" ? "Purchase Order Aging" : "Bill Aging"}
+            </CardTitle>
+            <CardDescription>
+              {report === "poAging"
+                ? "Open POs bucketed by days since creation — highlights slow-fulfilling orders."
+                : "Unpaid bills bucketed by days past due date — highlights AP exposure."}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-80 w-full">
+              <ClientOnly>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={report === "poAging" ? poAging : billAging}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                    <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                    <YAxis yAxisId="left" tick={{ fontSize: 12 }} />
+                    <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }} />
+                    <Tooltip />
+                    <Legend />
+                    <Bar yAxisId="left" dataKey="count" fill="#3b6fa0" name="Count" isAnimationActive={false} />
+                    <Bar yAxisId="right" dataKey="value" fill="#c4654a" name="Value ($)" isAnimationActive={false} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ClientOnly>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
     </PageShell>
   );
 }
