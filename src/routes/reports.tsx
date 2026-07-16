@@ -287,6 +287,40 @@ function ReportsPage() {
           </CardContent>
         </Card>
       )}
+
+      {(report === "poAging" || report === "billAging") && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-semibold">
+              {report === "poAging" ? "Purchase Order Aging" : "Bill Aging"}
+            </CardTitle>
+            <CardDescription>
+              {report === "poAging"
+                ? "Open POs bucketed by days since creation — highlights slow-fulfilling orders."
+                : "Unpaid bills bucketed by days past due date — highlights AP exposure."}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-80 w-full">
+              <ClientOnly>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={report === "poAging" ? poAging : billAging}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                    <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                    <YAxis yAxisId="left" tick={{ fontSize: 12 }} />
+                    <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }} />
+                    <Tooltip />
+                    <Legend />
+                    <Bar yAxisId="left" dataKey="count" fill="#3b6fa0" name="Count" isAnimationActive={false} />
+                    <Bar yAxisId="right" dataKey="value" fill="#c4654a" name="Value ($)" isAnimationActive={false} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ClientOnly>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
     </PageShell>
   );
 }
