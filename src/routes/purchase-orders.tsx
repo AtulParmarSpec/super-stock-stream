@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Search, Send, PackageCheck, Receipt } from "lucide-react";
+import { Search, Send, PackageCheck, Receipt, Plus, Trash2 } from "lucide-react";
 import { PageShell, ToneBadge } from "@/components/page-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,13 +12,14 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import {
-  Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle,
+  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
 import { useStore } from "@/lib/store";
 import {
-  purchaseOrders, sendPO, submitPOForApproval, createGRN, createBill,
+  purchaseOrders, sendPO, submitPOForApproval, createGRN, createBill, createPO,
   type PurchaseOrder, type POStatus, type GRNCondition,
 } from "@/lib/procurement-data";
+import { vendors, categoryMasters } from "@/lib/operations-data";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/purchase-orders")({
