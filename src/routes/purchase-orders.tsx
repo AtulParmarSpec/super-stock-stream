@@ -96,8 +96,24 @@ function POsPage() {
     setBill(null);
   }
 
+  function submitNewPO() {
+    if (!poForm.vendor) { toast.error("Vendor required"); return; }
+    const items = poForm.items.filter((i) => i.description.trim() && i.qty > 0);
+    if (!items.length) { toast.error("Add at least one item"); return; }
+    const po = createPO({
+      vendor: poForm.vendor, costCenter: poForm.costCenter, createdBy: poForm.createdBy,
+      expectedDelivery: poForm.expectedDelivery, items,
+    });
+    toast.success(`${po.poNo} created as Draft`);
+    setOpenNew(false); setPoForm(emptyPO());
+  }
+
   return (
-    <PageShell title="Purchase Orders" description="Raise, approve, dispatch, and receive against POs.">
+    <PageShell
+      title="Purchase Orders"
+      description="Raise, approve, dispatch, and receive against POs."
+      actions={<Button size="sm" onClick={() => setOpenNew(true)}><Plus className="mr-2 h-4 w-4" />New PO</Button>}
+    >
       <div className="flex flex-wrap gap-3 rounded-lg border border-border bg-card p-4 shadow-sm">
         <div className="relative min-w-[240px] flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
