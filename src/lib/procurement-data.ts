@@ -542,3 +542,49 @@ export function createBill(input: Omit<Bill, "id" | "billNo" | "status" | "match
   bump();
   return bill;
 }
+
+// ---------- Standalone creators (used by "New" dialogs on list pages) ----------
+
+export function createRfq(input: {
+  requester: string; department: string; items: { category: string; description: string; qty: number }[]; vendors: string[];
+}) {
+  const rfq: Quotation = {
+    id: uid("rfq"),
+    rfqNo: `RFQ-2026-${String(55 + quotations.length + 1).padStart(4, "0")}`,
+    requester: input.requester,
+    department: input.department,
+    status: "Sent",
+    createdOn: daysFromNow(0),
+    items: input.items.map((i) => ({ id: uid("qi"), category: i.category, description: i.description, qty: i.qty })),
+    responses: input.vendors.map((v) => ({
+      id: uid("vr"), vendor: v, amount: 0, deliveryDays: 0, validityDate: daysFromNow(14), terms: "", status: "Sent" as VendorResponseStatus,
+    })),
+  };
+  quotations.push(rfq);
+  logActivity("RFQ Created", rfq.rfqNo, input.requester);
+  bump();
+  return rfq;
+}
+
+export function createPO(input: {
+  vendor: string; costCenter: string; createdBy: string; expectedDelivery: string;
+  items: { category: string; description: string; qty: number; unitPrice: number }[];
+}) {
+  const total = input.items.reduce((s, i) => s + i.qty * i.unitPrice, 0);
+  const po: PurchaseOrder = {
+    id: uid("po"),
+    poNo: `PO-2026-${String(140 + purchaseOrders.length + 1).padStart(4, "0")}`,
+    vendor: input.vendor, status: "Draft", costCenter: input.costCenter,
+    createdBy: input.createdBy, createdOn: daysFromNow(0),
+    expectedDelivery: input.expectedDelivery, totalAmount: total,
+    items: input.items.map((i) => ({
+      id: uid("poi"), category: i.category, description: i.description,
+      qty: i.qty, unitPrice: i.unitPrice, qtyReceived: 0,
+    })),
+  };
+  purchaseOrders.push(po);
+  logActivity("PO Created", po.poNo, input.createdBy);
+  bump();
+  return po;
+}
+

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Search, Send, PackageCheck, Receipt } from "lucide-react";
+import { Search, Send, PackageCheck, Receipt, Plus, Trash2 } from "lucide-react";
 import { PageShell, ToneBadge } from "@/components/page-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,13 +12,14 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import {
-  Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle,
+  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
 import { useStore } from "@/lib/store";
 import {
-  purchaseOrders, sendPO, submitPOForApproval, createGRN, createBill,
+  purchaseOrders, sendPO, submitPOForApproval, createGRN, createBill, createPO,
   type PurchaseOrder, type POStatus, type GRNCondition,
 } from "@/lib/procurement-data";
+import { vendors, categoryMasters } from "@/lib/operations-data";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/purchase-orders")({
@@ -42,6 +43,14 @@ function POsPage() {
   const [bill, setBill] = useState<PurchaseOrder | null>(null);
   const [grnLines, setGrnLines] = useState<Record<string, { qty: number; condition: GRNCondition; remarks: string }>>({});
   const [billForm, setBillForm] = useState({ invoiceNo: "", amount: 0, tax: 0, invoiceDate: "", dueDate: "" });
+  const [openNew, setOpenNew] = useState(false);
+  type NewPOItem = { category: string; description: string; qty: number; unitPrice: number };
+  const emptyPO = () => ({
+    vendor: vendors[0]?.name ?? "", costCenter: "CC-1001", createdBy: "IT Admin",
+    expectedDelivery: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10),
+    items: [{ category: "Laptop", description: "", qty: 1, unitPrice: 0 }] as NewPOItem[],
+  });
+  const [poForm, setPoForm] = useState(emptyPO());
 
   const rows = useMemo(() => {
     const t = q.trim().toLowerCase();
@@ -87,8 +96,24 @@ function POsPage() {
     setBill(null);
   }
 
+  function submitNewPO() {
+    if (!poForm.vendor) { toast.error("Vendor required"); return; }
+    const items = poForm.items.filter((i) => i.description.trim() && i.qty > 0);
+    if (!items.length) { toast.error("Add at least one item"); return; }
+    const po = createPO({
+      vendor: poForm.vendor, costCenter: poForm.costCenter, createdBy: poForm.createdBy,
+      expectedDelivery: poForm.expectedDelivery, items,
+    });
+    toast.success(`${po.poNo} created as Draft`);
+    setOpenNew(false); setPoForm(emptyPO());
+  }
+
   return (
-    <PageShell title="Purchase Orders" description="Raise, approve, dispatch, and receive against POs.">
+    <PageShell
+      title="Purchase Orders"
+      description="Raise, approve, dispatch, and receive against POs."
+      actions={<Button size="sm" onClick={() => setOpenNew(true)}><Plus className="mr-2 h-4 w-4" />New PO</Button>}
+    >
       <div className="flex flex-wrap gap-3 rounded-lg border border-border bg-card p-4 shadow-sm">
         <div className="relative min-w-[240px] flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -223,6 +248,77 @@ function POsPage() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setBill(null)}>Cancel</Button>
             <Button onClick={submitBill}>Save & Match</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={openNew} onOpenChange={(o) => { setOpenNew(o); if (!o) setPoForm(emptyPO()); }}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>New Purchase Order</DialogTitle>
+            <DialogDescription>Create a Draft PO. Submit for approval to route it through Finance.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="mb-1.5 block text-xs">Vendor</Label>
+                <Select value={poForm.vendor} onValueChange={(v) => setPoForm({ ...poForm, vendor: v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>{vendors.map((v) => <SelectItem key={v.id} value={v.name}>{v.name}</SelectItem>)}</SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="mb-1.5 block text-xs">Cost Center</Label>
+                <Input value={poForm.costCenter} onChange={(e) => setPoForm({ ...poForm, costCenter: e.target.value })} />
+              </div>
+              <div>
+                <Label className="mb-1.5 block text-xs">Created By</Label>
+                <Input value={poForm.createdBy} onChange={(e) => setPoForm({ ...poForm, createdBy: e.target.value })} />
+              </div>
+              <div>
+                <Label className="mb-1.5 block text-xs">Expected Delivery</Label>
+                <Input type="date" value={poForm.expectedDelivery} onChange={(e) => setPoForm({ ...poForm, expectedDelivery: e.target.value })} />
+              </div>
+            </div>
+
+            <div>
+              <div className="mb-2 flex items-center justify-between">
+                <Label className="text-xs font-medium">Line items</Label>
+                <Button size="sm" variant="outline" onClick={() => setPoForm((s) => ({ ...s, items: [...s.items, { category: "Laptop", description: "", qty: 1, unitPrice: 0 }] }))}>
+                  <Plus className="mr-1 h-3 w-3" />Add line
+                </Button>
+              </div>
+              <div className="space-y-2">
+                {poForm.items.map((it, i) => (
+                  <div key={i} className="grid grid-cols-12 gap-2">
+                    <div className="col-span-3">
+                      <Select value={it.category} onValueChange={(v) => setPoForm((s) => ({ ...s, items: s.items.map((x, idx) => idx === i ? { ...x, category: v } : x) }))}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>{categoryMasters.map((c) => <SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>)}</SelectContent>
+                      </Select>
+                    </div>
+                    <Input className="col-span-5" placeholder="Description" value={it.description}
+                      onChange={(e) => setPoForm((s) => ({ ...s, items: s.items.map((x, idx) => idx === i ? { ...x, description: e.target.value } : x) }))} />
+                    <Input className="col-span-1" type="number" min={1} value={it.qty}
+                      onChange={(e) => setPoForm((s) => ({ ...s, items: s.items.map((x, idx) => idx === i ? { ...x, qty: Number(e.target.value) } : x) }))} />
+                    <Input className="col-span-2" type="number" min={0} placeholder="Unit price" value={it.unitPrice}
+                      onChange={(e) => setPoForm((s) => ({ ...s, items: s.items.map((x, idx) => idx === i ? { ...x, unitPrice: Number(e.target.value) } : x) }))} />
+                    <div className="col-span-1 self-center text-right font-mono text-xs">${(it.qty * it.unitPrice).toLocaleString()}</div>
+                    <Button className="col-span-0" size="icon" variant="ghost" onClick={() => setPoForm((s) => ({ ...s, items: s.items.filter((_, idx) => idx !== i) }))} disabled={poForm.items.length === 1}>
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-2 text-right text-sm">
+                <span className="text-muted-foreground">Total: </span>
+                <span className="font-mono font-semibold">${poForm.items.reduce((s, i) => s + i.qty * i.unitPrice, 0).toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpenNew(false)}>Cancel</Button>
+            <Button onClick={submitNewPO}>Create PO</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
