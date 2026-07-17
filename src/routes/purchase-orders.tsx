@@ -251,6 +251,77 @@ function POsPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={openNew} onOpenChange={(o) => { setOpenNew(o); if (!o) setPoForm(emptyPO()); }}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>New Purchase Order</DialogTitle>
+            <DialogDescription>Create a Draft PO. Submit for approval to route it through Finance.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="mb-1.5 block text-xs">Vendor</Label>
+                <Select value={poForm.vendor} onValueChange={(v) => setPoForm({ ...poForm, vendor: v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>{vendors.map((v) => <SelectItem key={v.id} value={v.name}>{v.name}</SelectItem>)}</SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="mb-1.5 block text-xs">Cost Center</Label>
+                <Input value={poForm.costCenter} onChange={(e) => setPoForm({ ...poForm, costCenter: e.target.value })} />
+              </div>
+              <div>
+                <Label className="mb-1.5 block text-xs">Created By</Label>
+                <Input value={poForm.createdBy} onChange={(e) => setPoForm({ ...poForm, createdBy: e.target.value })} />
+              </div>
+              <div>
+                <Label className="mb-1.5 block text-xs">Expected Delivery</Label>
+                <Input type="date" value={poForm.expectedDelivery} onChange={(e) => setPoForm({ ...poForm, expectedDelivery: e.target.value })} />
+              </div>
+            </div>
+
+            <div>
+              <div className="mb-2 flex items-center justify-between">
+                <Label className="text-xs font-medium">Line items</Label>
+                <Button size="sm" variant="outline" onClick={() => setPoForm((s) => ({ ...s, items: [...s.items, { category: "Laptop", description: "", qty: 1, unitPrice: 0 }] }))}>
+                  <Plus className="mr-1 h-3 w-3" />Add line
+                </Button>
+              </div>
+              <div className="space-y-2">
+                {poForm.items.map((it, i) => (
+                  <div key={i} className="grid grid-cols-12 gap-2">
+                    <div className="col-span-3">
+                      <Select value={it.category} onValueChange={(v) => setPoForm((s) => ({ ...s, items: s.items.map((x, idx) => idx === i ? { ...x, category: v } : x) }))}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>{categoryMasters.map((c) => <SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>)}</SelectContent>
+                      </Select>
+                    </div>
+                    <Input className="col-span-5" placeholder="Description" value={it.description}
+                      onChange={(e) => setPoForm((s) => ({ ...s, items: s.items.map((x, idx) => idx === i ? { ...x, description: e.target.value } : x) }))} />
+                    <Input className="col-span-1" type="number" min={1} value={it.qty}
+                      onChange={(e) => setPoForm((s) => ({ ...s, items: s.items.map((x, idx) => idx === i ? { ...x, qty: Number(e.target.value) } : x) }))} />
+                    <Input className="col-span-2" type="number" min={0} placeholder="Unit price" value={it.unitPrice}
+                      onChange={(e) => setPoForm((s) => ({ ...s, items: s.items.map((x, idx) => idx === i ? { ...x, unitPrice: Number(e.target.value) } : x) }))} />
+                    <div className="col-span-1 self-center text-right font-mono text-xs">${(it.qty * it.unitPrice).toLocaleString()}</div>
+                    <Button className="col-span-0" size="icon" variant="ghost" onClick={() => setPoForm((s) => ({ ...s, items: s.items.filter((_, idx) => idx !== i) }))} disabled={poForm.items.length === 1}>
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-2 text-right text-sm">
+                <span className="text-muted-foreground">Total: </span>
+                <span className="font-mono font-semibold">${poForm.items.reduce((s, i) => s + i.qty * i.unitPrice, 0).toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpenNew(false)}>Cancel</Button>
+            <Button onClick={submitNewPO}>Create PO</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </PageShell>
   );
 }
