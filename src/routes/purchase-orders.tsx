@@ -43,6 +43,14 @@ function POsPage() {
   const [bill, setBill] = useState<PurchaseOrder | null>(null);
   const [grnLines, setGrnLines] = useState<Record<string, { qty: number; condition: GRNCondition; remarks: string }>>({});
   const [billForm, setBillForm] = useState({ invoiceNo: "", amount: 0, tax: 0, invoiceDate: "", dueDate: "" });
+  const [openNew, setOpenNew] = useState(false);
+  type NewPOItem = { category: string; description: string; qty: number; unitPrice: number };
+  const emptyPO = () => ({
+    vendor: vendors[0]?.name ?? "", costCenter: "CC-1001", createdBy: "IT Admin",
+    expectedDelivery: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10),
+    items: [{ category: "Laptop", description: "", qty: 1, unitPrice: 0 }] as NewPOItem[],
+  });
+  const [poForm, setPoForm] = useState(emptyPO());
 
   const rows = useMemo(() => {
     const t = q.trim().toLowerCase();
